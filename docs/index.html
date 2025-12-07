@@ -357,6 +357,15 @@
             color: var(--danger);
         }
 
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            padding-top: 18px;
+        }
+
         @media (max-width: 640px) {
             .page {
                 padding-top: 48px;
@@ -382,11 +391,13 @@
             </div>
             <div class="nav-links">
                 <a href="#install">Instalasi</a>
+                <a href="#cdn">CDN</a>
                 <a href="#usage">Cara Pakai</a>
                 <a href="#demo">Demo</a>
                 <a href="#api">API</a>
                 <a href="#plates">Plat</a>
                 <a href="#banks">Bank</a>
+                <a href="#github">GitHub</a>
             </div>
         </nav>
     </header>
@@ -430,22 +441,21 @@
 &lt;input type="text" data-indo-format="phone"&gt;
 &lt;input type="text" data-indo-format="rupiah"&gt;
 
-&lt;!-- JS --&gt;
+&lt;!-- JS (via file lokal) --&gt;
 &lt;script src="dist/indo-input-formatter.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   IndoInputFormatter.autoInit();
 &lt;/script&gt;</code></pre>
 
                 <p class="note">
-                    Ketika user mengetik, input akan otomatis diformat: nomor HP ditata per blok,
-                    Rupiah diberi pemisah ribuan, dan sebagainya.
+                    Atau gunakan via CDN (lihat bagian <b>Install via CDN</b>) untuk integrasi yang lebih cepat.
                 </p>
             </div>
         </section>
 
         <!-- INSTALLATION -->
         <section id="install">
-            <h2>1. Instalasi</h2>
+            <h2>1. Instalasi (File Lokal)</h2>
             <p>Letakkan file plugin di project Anda, contoh struktur:</p>
 
             <pre><code>your-project/
@@ -468,6 +478,29 @@
   const input = document.getElementById('phone');
   IndoInputFormatter.attachTo(input, 'phone');
 &lt;/script&gt;</code></pre>
+        </section>
+
+        <hr class="section-divider" id="cdn">
+
+        <!-- CDN INSTALL -->
+        <section>
+            <h2>1B. Install via CDN (Tanpa Download)</h2>
+            <p>
+                Untuk penggunaan yang lebih cepat (misalnya di landing page, dashboard, atau docs),
+                Anda bisa memuat plugin langsung dari CDN <b>jsDelivr</b>:
+            </p>
+
+            <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/mfahri021/indo-input-formatter@v1.0.0/dist/indo-input-formatter.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  IndoInputFormatter.autoInit();
+&lt;/script&gt;</code></pre>
+
+            <p class="note">
+                ✅ Gunakan versi bertag <code>@v1.0.0</code> untuk produksi agar stabil.<br>
+                ⚠️ Jika menggunakan tanpa versi (tanpa <code>@v1.0.0</code>), project Anda akan selalu memakai build
+                terbaru
+                yang mungkin berubah sewaktu-waktu.
+            </p>
         </section>
 
         <hr class="section-divider" id="usage">
@@ -821,9 +854,36 @@ console.log(IndoInputFormatter.data.banks);</code></pre>
                 <li>Project open source</li>
             </ul>
             <p>
+                Plugin dirilis dengan lisensi <b>MIT</b>. Silakan cek file <code>LICENSE</code> di repository.
                 Disarankan untuk tetap memberikan kredit ke pembuat asli di dokumentasi / about page
                 jika digunakan secara publik.
             </p>
+        </section>
+
+        <hr class="section-divider" id="github">
+
+        <!-- GITHUB REPO -->
+        <section>
+            <h2>9. GitHub Repository</h2>
+            <p>
+                Project ini bersifat <b>open-source</b> dan tersedia di GitHub:
+            </p>
+
+            <pre><code>https://github.com/mfahri021/indo-input-formatter</code></pre>
+
+            <p>
+                Anda dipersilakan untuk:
+            </p>
+            <ul>
+                <li>✅ Menggunakan untuk project pribadi & komersial</li>
+                <li>✅ Membuat fork dan pengembangan lanjutan</li>
+                <li>✅ Mengirim pull request untuk perbaikan & fitur baru</li>
+            </ul>
+
+            <a href="https://github.com/mfahri021/indo-input-formatter" target="_blank" class="btn"
+                style="margin-top:10px;">
+                ⭐ Lihat di GitHub
+            </a>
         </section>
 
         <div class="section-divider"></div>
@@ -835,8 +895,9 @@ console.log(IndoInputFormatter.data.banks);</code></pre>
 
     </main>
 
-    <!-- Plugin JS -->
-    <script src="../dist/indo-input-formatter.js"></script>
+    <!-- Plugin JS via CDN -->
+    <script
+        src="https://cdn.jsdelivr.net/gh/mfahri021/indo-input-formatter@v1.0.0/dist/indo-input-formatter.js"></script>
 
     <script>
         // Inisialisasi formatter
@@ -916,7 +977,6 @@ console.log(IndoInputFormatter.data.banks);</code></pre>
             tr.appendChild(tdDesc);
             plateTableBody.appendChild(tr);
         });
-
 
         // TABEL BANKS
         const bankTableBody = document.querySelector('#bankTable tbody');
