@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Indo Input Formatter – Documentation & Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Basic Styling -->
+    <style>
+        :root {
+            --bg: #020617;
+            --bg-soft: #020617;
+            --accent: #22c55e;
+            --accent-soft: rgba(34, 197, 94, 0.1);
+            --accent-border: rgba(34, 197, 94, 0.4);
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --border: #1f2937;
+            --card: #020617;
+            --card-soft: #020617;
+            --danger: #f97373;
+            --code-bg: #020617;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #1e293b 0, #020617 60%);
+            color: var(--text);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Layout */
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 60px 18px 80px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: linear-gradient(to bottom, #020617ee, #020617aa 80%, transparent);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: radial-gradient(circle at 30% 30%, #4ade80, #22c55e 40%, #22c55e11 70%);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .nav-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            color: var(--muted);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            margin: 0 0 10px;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-top: 40px;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 16px;
+            margin-top: 24px;
+            margin-bottom: 6px;
+        }
+
+        p,
+        li {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        /* Badges & pills */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            border: 1px solid var(--accent-border);
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            background: rgba(148, 163, 184, 0.15);
+            margin-right: 6px;
+        }
+
+        /* Cards & sections */
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr);
+            gap: 28px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 840px) {
+            .hero {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .hero-card {
+            background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.15), #020617 55%);
+            border-radius: 20px;
+            padding: 20px 22px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 18px 20px;
+            border: 1px solid var(--border);
+            margin-top: 16px;
+        }
+
+        .card-soft {
+            background: var(--card-soft);
+            border-radius: 16px;
+            padding: 16px 18px;
+            border: 1px dashed rgba(148, 163, 184, 0.4);
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 28px 0;
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--code-bg);
+            border-radius: 10px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 13px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        /* Demo Grid */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .demo-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .demo-field label {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .demo-field input,
+        .demo-field select {
+            background: #020617;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 7px 10px;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .demo-meta {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        /* API table */
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .api-table th,
+        .api-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .api-table th {
+            background: rgba(15, 23, 42, 0.8);
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        /* Bank & plate tables */
+        .mini-table-wrapper {
+            max-height: 260px;
+            overflow: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-top: 10px;
+        }
+
+        .mini-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .mini-table th,
+        .mini-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+        }
+
+        .mini-table th {
+            background: rgba(15, 23, 42, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.65);
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border-radius: 999px;
+            border: 1px solid var(--accent-border);
+            padding: 7px 14px;
+            font-size: 12px;
+            color: var(--accent);
+            background: var(--accent-soft);
+            cursor: pointer;
+        }
+
+        .btn-ghost {
+            border-color: rgba(148, 163, 184, 0.5);
+            background: transparent;
+            color: var(--muted);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .badge-small {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            color: var(--muted);
+        }
+
+        .note {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        .danger-text {
+            color: var(--danger);
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding-top: 48px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="nav">
+            <div class="nav-left">
+                <div class="nav-logo"></div>
+                <div>
+                    <div class="nav-title">Indo Input Formatter</div>
+                    <div class="nav-badge">v1.0.0 • Indonesia-focused input utilities</div>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#install">Instalasi</a>
+                <a href="#usage">Cara Pakai</a>
+                <a href="#demo">Demo</a>
+                <a href="#api">API</a>
+                <a href="#plates">Plat</a>
+                <a href="#banks">Bank</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="page">
+
+        <!-- HERO -->
+        <section class="hero">
+            <div>
+                <span class="badge">Plugin JavaScript untuk Form Indonesia</span>
+                <h1>Formatter & Validator Input<br>untuk Aplikasi Indonesia</h1>
+                <p>
+                    <b>Indo Input Formatter</b> membantu Anda memformat dan memvalidasi input
+                    seperti <b>nomor HP, NPWP, NIK, Rupiah, rekening, kartu, plat, tanggal, dan jam</b>
+                    hanya dengan menambahkan atribut <code>data-indo-format</code>.
+                </p>
+
+                <div class="btn-row" style="margin-top: 16px;">
+                    <button class="btn"
+                        onclick="document.getElementById('install').scrollIntoView({behavior:'smooth'});">
+                        ⚡ Mulai 1 Menit
+                    </button>
+                    <button class="btn btn-ghost"
+                        onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'});">
+                        🔍 Lihat Demo
+                    </button>
+                </div>
+
+                <p class="note">
+                    Dirancang untuk sistem <b>keuangan, topup, organisasi, ERP, dan aplikasi administrasi</b> yang butuh
+                    format khas Indonesia.
+                </p>
+            </div>
+
+            <div class="hero-card">
+                <p style="font-size:13px; color:var(--muted); margin-top:0;">
+                    Contoh sederhana penggunaan:
+                </p>
+
+                <pre><code>&lt;!-- HTML --&gt;
+&lt;input type="text" data-indo-format="phone"&gt;
+&lt;input type="text" data-indo-format="rupiah"&gt;
+
+&lt;!-- JS --&gt;
+&lt;script src="dist/indo-input-formatter.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  IndoInputFormatter.autoInit();
+&lt;/script&gt;</code></pre>
+
+                <p class="note">
+                    Ketika user mengetik, input akan otomatis diformat: nomor HP ditata per blok,
+                    Rupiah diberi pemisah ribuan, dan sebagainya.
+                </p>
+            </div>
+        </section>
+
+        <!-- INSTALLATION -->
+        <section id="install">
+            <h2>1. Instalasi</h2>
+            <p>Letakkan file plugin di project Anda, contoh struktur:</p>
+
+            <pre><code>your-project/
+├── dist/
+│   └── indo-input-formatter.js
+└── index.html</code></pre>
+
+            <h3>A. Include via file lokal</h3>
+            <pre><code>&lt;script src="dist/indo-input-formatter.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  IndoInputFormatter.autoInit();
+&lt;/script&gt;</code></pre>
+
+            <h3>B. Inisialisasi manual pada elemen tertentu</h3>
+            <p>Kalau Anda ingin hanya beberapa input saja yang di-attach:</p>
+
+            <pre><code>&lt;input id="phone" data-indo-format="phone"&gt;
+
+&lt;script&gt;
+  const input = document.getElementById('phone');
+  IndoInputFormatter.attachTo(input, 'phone');
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <hr class="section-divider" id="usage">
+
+        <!-- USAGE -->
+        <section>
+            <h2>2. Cara Pakai Dasar</h2>
+            <p>
+                Cukup tambahkan atribut <code>data-indo-format</code> di elemen
+                <code>&lt;input&gt;</code> dan panggil <code>IndoInputFormatter.autoInit()</code>.
+            </p>
+
+            <pre><code>&lt;input type="text" data-indo-format="phone"&gt;
+&lt;input type="text" data-indo-format="rupiah"&gt;
+&lt;input type="text" data-indo-format="npwp"&gt;</code></pre>
+
+            <h3>Tipe Format yang Didukung</h3>
+            <ul>
+                <li><span class="pill">phone</span> Nomor HP Indonesia</li>
+                <li><span class="pill">npwp</span> NPWP</li>
+                <li><span class="pill">nik</span> NIK (16 digit)</li>
+                <li><span class="pill">rupiah</span> Nominal Rupiah (tanpa prefix "Rp")</li>
+                <li><span class="pill">otp</span> OTP (panjang bisa diatur)</li>
+                <li><span class="pill">pin</span> PIN (panjang bisa diatur)</li>
+                <li><span class="pill">rekening</span> Nomor rekening (format blok, generic)</li>
+                <li><span class="pill">card</span> Kartu debit/kredit</li>
+                <li><span class="pill">plat</span> Plat nomor Indonesia (strict pattern)</li>
+                <li><span class="pill">tanggal</span> Tanggal (dd-mm-yyyy)</li>
+                <li><span class="pill">jam</span> Jam (HH:MM)</li>
+            </ul>
+
+            <h3>OTP & PIN (Panjang Fleksibel)</h3>
+            <pre><code>&lt;input
+  type="text"
+  data-indo-format="otp"
+  data-indo-otp-length="6"  /&gt;
+
+&lt;input
+  type="password"
+  data-indo-format="pin"
+  data-indo-pin-length="4" /&gt;</code></pre>
+        </section>
+
+        <hr class="section-divider" id="demo">
+
+        <!-- DEMO -->
+        <section>
+            <h2>3. Demo Langsung</h2>
+            <p>Silakan coba ketik di field berikut dan lihat bagaimana formatter bekerja.</p>
+
+            <div class="card">
+                <div class="demo-grid">
+                    <div class="demo-field">
+                        <label>Nomor HP</label>
+                        <input data-indo-format="phone" placeholder="081234567890">
+                        <div class="demo-meta">Normalisasi & blok 4-4-4</div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>NPWP</label>
+                        <input data-indo-format="npwp" placeholder="123456789123456">
+                        <div class="demo-meta">Format: 99.999.999.9-999.999</div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>NIK</label>
+                        <input data-indo-format="nik" placeholder="3201231509950001">
+                        <div class="demo-meta">16 digit, blok 4-4-4-4</div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>Rupiah</label>
+                        <input data-indo-format="rupiah" placeholder="1000000">
+                        <div class="demo-meta">Tanpa prefix "Rp"</div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>OTP (6 digit)</label>
+                        <input data-indo-format="otp" data-indo-otp-length="6" placeholder="123456">
+                        <div class="demo-meta">Hanya digit, max 6</div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>PIN (4 digit)</label>
+                        <input data-indo-format="pin" data-indo-pin-length="4" placeholder="••••">
+                        <div class="demo-meta">Cocok untuk PIN kasir / device</div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>Rekening</label>
+                        <input id="demoRek" data-indo-format="rekening" placeholder="123456789012">
+                        <div class="demo-meta">Blok per 4 digit</div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>Pilih Bank (untuk validasi rekening)</label>
+                        <select id="demoBankSelect">
+                            <option value="">Tanpa bank (generic)</option>
+                        </select>
+                        <button class="btn" id="btnCheckRek" type="button">Cek Validasi Rekening</button>
+                        <div id="rekResult" class="demo-meta"></div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>Kartu Debit/Kredit</label>
+                        <input data-indo-format="card" placeholder="1234567890123456">
+                        <div class="demo-meta">Blok 4-4-4-4</div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>Plat Nomor</label>
+                        <input id="demoPlat" data-indo-format="plat" placeholder="BG 1234 FA">
+                        <button class="btn" id="btnCheckPlat" type="button" style="margin-top:6px;">Cek Validasi
+                            Plat</button>
+                        <div id="platResult" class="demo-meta"></div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>Tanggal (dd-mm-yyyy)</label>
+                        <input data-indo-format="tanggal" placeholder="17081945">
+                        <div class="demo-meta">Konversi dari angka saja</div>
+                    </div>
+
+                    <div class="demo-field">
+                        <label>Jam (HH:MM)</label>
+                        <input data-indo-format="jam" placeholder="1430">
+                        <div class="demo-meta">Konversi ke format jam</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-divider" id="api">
+
+        <!-- API REFERENCE -->
+        <section>
+            <h2>4. API Reference</h2>
+            <p>Untuk penggunaan lanjutan, Anda bisa memanggil fungsi-fungsi di bawah ini.</p>
+
+            <h3>4.1. Core Methods</h3>
+
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Deskripsi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>IndoInputFormatter.autoInit(root?)</code></td>
+                        <td>
+                            Mencari semua <code>&lt;input&gt;</code> dengan atribut
+                            <code>data-indo-format</code> di dalam <code>root</code> (default: <code>document</code>)
+                            dan meng-attach formatter.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>IndoInputFormatter.attachTo(input, type)</code></td>
+                        <td>
+                            Meng-attach formatter ke satu elemen input.
+                            Cocok digunakan jika Anda ingin kontrol manual per field.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>IndoInputFormatter.format(type, value, input?)</code></td>
+                        <td>
+                            Mengembalikan nilai yang sudah diformat berdasarkan tipe.
+                            Biasanya dipanggil secara internal, tapi bisa dipakai manual juga.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>IndoInputFormatter.getRawValue(input)</code></td>
+                        <td>
+                            Mengembalikan hanya digit dari nilai input (tanpa titik, spasi, dsb).
+                            Cocok dipakai sebelum mengirim ke backend / database.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>4.2. Validator</h3>
+            <p>Validator mengembalikan <code>true</code> atau <code>false</code>.</p>
+
+            <pre><code>// NIK (16 digit + validasi tanggal lahir basic)
+IndoInputFormatter.validate.nik("3201231509950001");
+
+// NPWP (15 digit)
+IndoInputFormatter.validate.npwp("12.345.678.9-123.456");
+
+// Nomor HP Indonesia
+IndoInputFormatter.validate.phone("081234567890");
+
+// Plat Nomor Indonesia (prefix terdaftar)
+IndoInputFormatter.validate.plat("BG 1234 FA");
+
+// Rekening (generic)
+IndoInputFormatter.validate.rekening("1234567890");
+
+// Rekening + info bank (kode / alias)
+IndoInputFormatter.validate.rekening("1234567890", "014");  // BCA via kode
+IndoInputFormatter.validate.rekening("1234567890", "BCA");  // BCA via alias</code></pre>
+
+            <p class="note">
+                Validator rekening bersifat <b>best effort</b>: jika bank dikenal dan memiliki aturan panjang nomor,
+                akan pakai aturan tersebut. Jika tidak, gunakan range generik 6–20 digit.
+            </p>
+
+            <h3>4.3. Data Helper</h3>
+            <p>
+                Anda juga bisa mengakses daftar prefix plat dan bank dari JS:
+            </p>
+
+            <pre><code>// Daftar prefix plat (array of string)
+console.log(IndoInputFormatter.data.platePrefixes);
+
+// Daftar bank (object keyed by bank code)
+console.log(IndoInputFormatter.data.banks);</code></pre>
+        </section>
+
+        <hr class="section-divider" id="plates">
+
+        <!-- PLATE INFO -->
+        <section>
+            <h2>5. Plat Nomor Indonesia</h2>
+            <p>
+                Formatter <code>plat</code> menggunakan pola:
+                <code>[1–2 huruf] [1–4 angka] [1–3 huruf]</code>.
+                Validator <code>validate.plat</code> hanya menganggap valid
+                jika prefix-nya ada di daftar resmi (<code>platePrefixes</code>).
+            </p>
+
+            <div class="card-soft">
+                <h3>Prefix Wilayah (Ringkas)</h3>
+                <p class="note">
+                    Daftar di bawah ini diambil dari <code>IndoInputFormatter.data.platePrefixes</code>.
+                    Anda bisa extend sendiri sesuai kebutuhan (misal wilayah baru/khusus).
+                </p>
+
+                <div class="mini-table-wrapper">
+                    <table class="mini-table" id="plateTable">
+                        <thead>
+                            <tr>
+                                <th style="width:80px;">Prefix</th>
+                                <th>Wilayah / Provinsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-divider" id="banks">
+
+        <!-- BANK INFO -->
+        <section>
+            <h2>6. Bank Indonesia</h2>
+            <p>
+                Validator rekening menggunakan <code>IndoInputFormatter.data.banks</code> sebagai referensi.
+                Tabel di bawah menampilkan isi dari data tersebut (kode, nama, alias).
+            </p>
+
+            <div class="card-soft">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+                    <div>
+                        <h3 style="margin-top:0;">Daftar Bank dalam Data Plugin</h3>
+                        <p class="note">
+                            Data ini <b>bukan</b> daftar resmi BI, namun cukup untuk kebutuhan validasi ringan.
+                            Anda bisa menambahkan / mengubah entri di file JS.
+                        </p>
+                    </div>
+                    <span class="badge-small" id="bankCountLabel">
+                        Bank terdaftar: 0
+                    </span>
+                </div>
+
+                <div class="mini-table-wrapper">
+                    <table class="mini-table" id="bankTable">
+                        <thead>
+                            <tr>
+                                <th style="width:70px;">Kode</th>
+                                <th>Nama Bank</th>
+                                <th style="width:140px;">Alias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <!-- TROUBLESHOOTING & FAQ -->
+        <section>
+            <h2>7. Troubleshooting & FAQ</h2>
+
+            <h3>Kenapa format tidak berubah ketika saya mengetik?</h3>
+            <ul>
+                <li>Pastikan file <code>indo-input-formatter.js</code> berhasil dimuat (cek Console / Network).</li>
+                <li>Pastikan <code>IndoInputFormatter.autoInit()</code> dipanggil setelah HTML selesai dimuat.</li>
+                <li>Pastikan input memiliki atribut <code>data-indo-format="..."</code> dengan tipe yang benar.</li>
+            </ul>
+
+            <h3>Apakah plugin ini menggantikan validasi backend?</h3>
+            <p>
+                Tidak. Plugin ini membantu <b>UX dan validasi ringan di sisi frontend</b>.
+                Untuk keamanan dan integritas data, Anda tetap perlu validasi ulang di backend.
+            </p>
+
+            <h3>Kenapa nomor rekening saya dianggap tidak valid?</h3>
+            <ul>
+                <li>
+                    Jika Anda memberikan <code>bankCode</code> atau alias yang tidak terdaftar,
+                    validator akan menggunakan range generik 6–20 digit.
+                </li>
+                <li>
+                    Beberapa bank punya variasi panjang rekening. Data di plugin ini adalah pendekatan umum,
+                    Anda bebas menyesuaikan <code>BANK_RULES</code> di file JS.
+                </li>
+            </ul>
+
+            <h3>Kenapa plat nomor saya tidak valid padahal benar?</h3>
+            <ul>
+                <li>
+                    Pastikan format sesuai pola: <code>BG 1234 FA</code> (spasi di antara blok).
+                </li>
+                <li>
+                    Jika prefix benar tapi tidak ada di <code>platePrefixes</code>, tambahkan prefix itu di
+                    <code>VALID_PLATE_PREFIXES</code> pada file JS.
+                </li>
+            </ul>
+        </section>
+
+        <hr class="section-divider">
+
+        <!-- LICENSE / FOOTER -->
+        <section>
+            <h2>8. Lisensi & Penggunaan</h2>
+            <p>
+                Anda bebas menggunakan plugin ini untuk:
+            </p>
+            <ul>
+                <li>Aplikasi internal (ERP, keuangan, organisasi, dll.)</li>
+                <li>Aplikasi komersial (topup, membership, sistem administrasi)</li>
+                <li>Project open source</li>
+            </ul>
+            <p>
+                Disarankan untuk tetap memberikan kredit ke pembuat asli di dokumentasi / about page
+                jika digunakan secara publik.
+            </p>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <footer class="footer">
+            Indo Input Formatter v1.0.0 – Form utilities untuk developer Indonesia.<br>
+            Dibuat untuk mempermudah hidup backend & frontend saat mengurus format data lokal.
+        </footer>
+
+    </main>
+
+    <!-- Plugin JS -->
+    <script src="../dist/indo-input-formatter.js"></script>
+
+    <script>
+        // Inisialisasi formatter
+        IndoInputFormatter.autoInit();
+
+        // DEMO: VALIDASI PLAT
+        const demoPlatInput = document.getElementById('demoPlat');
+        const platResult = document.getElementById('platResult');
+        document.getElementById('btnCheckPlat').addEventListener('click', function () {
+            const value = demoPlatInput.value;
+            const isValid = IndoInputFormatter.validate.plat(value);
+            if (!value) {
+                platResult.textContent = 'Silakan isi plat terlebih dahulu.';
+                platResult.classList.remove('danger-text');
+                return;
+            }
+            platResult.textContent = isValid
+                ? '✅ Plat dianggap valid berdasarkan prefix & pola.'
+                : '❌ Plat tidak valid menurut rule plugin. (Prefix/pola tidak dikenal)';
+            platResult.classList.toggle('danger-text', !isValid);
+        });
+
+        // DEMO: BANK SELECT + VALIDASI REKENING
+        const bankSelect = document.getElementById('demoBankSelect');
+        const bankData = IndoInputFormatter.data.banks || {};
+        const bankKeys = Object.keys(bankData);
+
+        bankKeys.sort(); // biar rapi
+
+        bankKeys.forEach(function (code) {
+            const bank = bankData[code];
+            const option = document.createElement('option');
+            option.value = code;
+            option.textContent = code + ' – ' + bank.name;
+            bankSelect.appendChild(option);
+        });
+
+        const demoRekInput = document.getElementById('demoRek');
+        const rekResult = document.getElementById('rekResult');
+        document.getElementById('btnCheckRek').addEventListener('click', function () {
+            const val = demoRekInput.value;
+            const bankCode = bankSelect.value || undefined;
+            const isValid = IndoInputFormatter.validate.rekening(val, bankCode);
+
+            if (!val) {
+                rekResult.textContent = 'Silakan isi nomor rekening terlebih dahulu.';
+                rekResult.classList.remove('danger-text');
+                return;
+            }
+
+            const raw = IndoInputFormatter.getRawValue(demoRekInput);
+            const bankLabel = bankCode ? (bankData[bankCode]?.name || bankCode) : 'Generic (tanpa bank)';
+
+            rekResult.textContent = (isValid ? '✅ Valid ' : '❌ Tidak valid ') +
+                'untuk konteks: ' + bankLabel + '. ' +
+                'Raw digit: ' + raw + ' (' + raw.length + ' digit)';
+            rekResult.classList.toggle('danger-text', !isValid);
+        });
+
+        // TABEL PREFIX PLAT (DENGAN WILAYAH)
+        const plateTableBody = document.querySelector('#plateTable tbody');
+        const plateMap = IndoInputFormatter.data.plateMap || {};
+        const platePrefixes = Object.keys(plateMap).sort();
+
+        platePrefixes.forEach(function (prefix) {
+            const tr = document.createElement('tr');
+            const tdCode = document.createElement('td');
+            const tdDesc = document.createElement('td');
+
+            tdCode.textContent = prefix;
+            tdCode.style.fontWeight = '600';
+
+            const region = plateMap[prefix] || 'Wilayah tidak diketahui';
+            tdDesc.textContent = region;
+
+            tr.appendChild(tdCode);
+            tr.appendChild(tdDesc);
+            plateTableBody.appendChild(tr);
+        });
+
+
+        // TABEL BANKS
+        const bankTableBody = document.querySelector('#bankTable tbody');
+        const bankCountLabel = document.getElementById('bankCountLabel');
+
+        bankKeys.forEach(function (code) {
+            const bank = bankData[code];
+            const tr = document.createElement('tr');
+
+            const tdCode = document.createElement('td');
+            const tdName = document.createElement('td');
+            const tdAlias = document.createElement('td');
+
+            tdCode.textContent = code;
+            tdName.textContent = bank.name;
+
+            if (Array.isArray(bank.alias) && bank.alias.length > 0) {
+                tdAlias.textContent = bank.alias.join(', ');
+            } else {
+                tdAlias.textContent = '-';
+            }
+
+            tr.appendChild(tdCode);
+            tr.appendChild(tdName);
+            tr.appendChild(tdAlias);
+            bankTableBody.appendChild(tr);
+        });
+
+        bankCountLabel.textContent = 'Bank terdaftar: ' + bankKeys.length;
+    </script>
+
+</body>
+
+</html>
